@@ -138,6 +138,7 @@ const login = (req, res) => {
 const profile = (req, res) => {
     // Recibir el parámetro del id de usuario por la url
     const id = req.params.id;
+
     // Consulta para sacar los datos del usuario
 
     //const userProfile = await User.findById(id)
@@ -158,10 +159,10 @@ const profile = (req, res) => {
                 const followInfo = await FollowService.followThisUser(req.user.id, id)
                 //Devolver resultado
 
-
+                console.log(userProfile)
                 return res.status(200).send({
                     status: "success",
-                    message: userProfile,
+                    user: userProfile,
                     following: followInfo.following,
                     follower: followInfo.follower
                 })
