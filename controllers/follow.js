@@ -10,6 +10,7 @@ const followService = require("../services/followService")
 // Acciones de prueba
 
 const pruebaFollow = (req, res) => {
+  
     return res.status(200).send({
         message: "Mensaje enviado desde: controller/follow.js"
     })
@@ -21,6 +22,7 @@ const saveFollow = (req, res) => {
 
     // Conseguir datos del body
     const params = req.body
+
 
     // Sacar id del usuario identificado
     const identity = req.user
@@ -59,9 +61,9 @@ const saveFollow = (req, res) => {
 const unFollow = async (req, res) => {
 
     // Recoger el id del usuario identificado
+    
 
     const userId = req.user.id
-
     // Recoger el id del usuario que siglo y quiero dejar de seguir
     const followedId = req.params.id
     // Find de las coincidades y hacer remove
@@ -117,8 +119,8 @@ const following = (req, res) => {
         sort: { _id: -1 }
     };
 
-    Follow.paginate({"user": userId}, opciones, async(error, users) => {
-        if (error || !users) return res.status(404)
+    Follow.paginate({"user": userId}, opciones, async(error, results) => {
+        if (error || !results) return res.status(404)
             .json({ status: "Error", message: "NO SE HA ENCONTRADO EL USUARIO" })
        
 
@@ -128,8 +130,8 @@ const following = (req, res) => {
         return res.status(200).send({
             status: "success",
             message: "Listado de usuarios que estoy siguiendo",
-            users,
-            totalpages: users.totalPages,
+            results,
+            totalpages: results.totalPages,
             user_following: followUserIds.following,
             user_following_me: followUserIds.followers
             
@@ -172,8 +174,8 @@ const followers = (req, res) => {
 
 
 
-    Follow.paginate({"followed": userId}, opciones, async(error, users) => {
-        if (error || !users) return res.status(404)
+    Follow.paginate({"followed": userId}, opciones, async(error, results) => {
+        if (error || !results) return res.status(404)
             .json({ status: "Error", message: "NO SE HA ENCONTRADO EL USUARIO" })
        
 
@@ -183,8 +185,8 @@ const followers = (req, res) => {
         return res.status(200).send({
             status: "success",
             message: "Listado de usuarios que me siguen",
-            users,
-            totalpages: users.totalPages,
+            results,
+            totalpages: results.totalPages,
             user_following: followUserIds.following,
             user_following_me: followUserIds.followers
             

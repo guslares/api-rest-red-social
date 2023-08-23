@@ -159,7 +159,7 @@ const profile = (req, res) => {
                 const followInfo = await FollowService.followThisUser(req.user.id, id)
                 //Devolver resultado
 
-                console.log(userProfile)
+               // console.log(userProfile)
                 return res.status(200).send({
                     status: "success",
                     user: userProfile,
@@ -381,15 +381,16 @@ const avatar = (req, res) => {
 
 const counters = async (req,res)=>{ 
     let userId = req.user.id;
-
     if (req.params.id) {
         userId = req.params.id;
     }
-    
+
     try {
         const following = await Follow.count({"user":userId})
         const followed = await Follow.count({"followed":userId})
         const publications = await Publication.count({"user":userId})
+
+        console.log(publications)
 
         return res.status(200).send({
             userId,
