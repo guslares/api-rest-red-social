@@ -127,7 +127,7 @@ const user = (req, res) => {
 
     // Sacar el id del usuario
     const userId = req.params.id
-    console.log(req.params)
+  
     // control la página
     let page = 1
     const itemsPerPage = 5

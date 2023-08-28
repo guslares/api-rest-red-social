@@ -12,6 +12,7 @@ const path = require("path")
 //Importar servicios =
 const FollowService = require("../services/followService")
 const jwt = require("../services/jwt")
+const validate = require("../helpers/validate")
 
 
 // Acciones de prueba
@@ -39,6 +40,17 @@ const register = (req, res) => {
         })
     }
 
+    // Validación avanzada 
+
+    try {
+        validate(params)
+    } catch (error) {
+        return res.status(400).json({
+            status: "error",
+            message: "Validación no superada"
+        })
+
+    }
 
     // Control de usuarios duplicados
     User.find({
@@ -48,8 +60,8 @@ const register = (req, res) => {
         ],
     }).then(async (users) => {
         if (users && users.length >= 1) {
-            return res.status(200).send({
-                status: "success",
+            return res.status(500).send({
+                status: "error",
                 message: "El usuario ya existe",
             });
         }
@@ -159,7 +171,7 @@ const profile = (req, res) => {
                 const followInfo = await FollowService.followThisUser(req.user.id, id)
                 //Devolver resultado
 
-               // console.log(userProfile)
+                // console.log(userProfile)
                 return res.status(200).send({
                     status: "success",
                     user: userProfile,
@@ -258,7 +270,7 @@ const update = (req, res) => {
             let pwd = await bcrypt.hash(userToUpdate.password, 10);
             userToUpdate.password = pwd;
         }
-        else{
+        else {
             delete userToUpdate.password
         }
 
@@ -379,18 +391,18 @@ const avatar = (req, res) => {
 
 }
 
-const counters = async (req,res)=>{ 
+const counters = async (req, res) => {
     let userId = req.user.id;
     if (req.params.id) {
         userId = req.params.id;
     }
 
     try {
-        const following = await Follow.count({"user":userId})
-        const followed = await Follow.count({"followed":userId})
-        const publications = await Publication.count({"user":userId})
+        const following = await Follow.count({ "user": userId })
+        const followed = await Follow.count({ "followed": userId })
+        const publications = await Publication.count({ "user": userId })
 
-        console.log(publications)
+
 
         return res.status(200).send({
             userId,
@@ -398,10 +410,10 @@ const counters = async (req,res)=>{
             followed,
             publications
         })
-        
+
     } catch (error) {
         return res.status(500).send({
-            status:"error",
+            status: "error",
             message: "Error en los contadores",
             error
         })
